@@ -12,4 +12,5 @@ clstr2txt.pl is from CD-HIT.
 5.	Water mark passed to .env (e.g. "some quoted text").
 6.	Minimal id for preclustering sequence collapsing (suggested >= 0.7) 
 7.	Minimal coverage for preclustering (suggested >= 0.75) (-aS in cd-hit, aligment coverage of the smaller seq)
+8.  Output similarity ("sym") or dissimilarity ("dissym").
 

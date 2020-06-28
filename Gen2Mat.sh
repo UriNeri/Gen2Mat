@@ -12,6 +12,7 @@ if [[ $# -eq 0 ]] ; then
    5  Water mark passed to .env (some text, deafult is date).
    6  Minimal id for preclustering sequence collapsing (0.9) 
    7  Minimal coverage for preclustering (0.75) (-aS in cd-hit, aligment coverage of the smaller seq)
+   8  Output similarity ("Sym") or dissimilarity (not "Sym").
 '
 exit
 fi
@@ -57,7 +58,14 @@ echo "Looking clusters shared between $genome_1 AND $genome_2"
 comm  ../"$genome_1"_clstrs.txt ../"$genome_2"_clstrs.txt > tmp 
 header=$(echo $genome_1'\t'$genome_2'\t'$genome_1"_AND_"$genome_2)
 sed "1 i$header" tmp > ./"$genome_1"_vs_"$genome_2".tsv 
-Nshared=$(awk -F'\t' '{print $3}' ./"$genome_1"_vs_"$genome_2".tsv  |sort -u |echo "$(($(wc -l)-1))")
+if [ "$8" == "Sym" ]; 
+then
+  Nshared=$(awk -F'\t' '{print $3}' ./"$genome_1"_vs_"$genome_2".tsv  |sort -u |echo "$(($(wc -l)-1))")
+fi
+if [ "$8" != "Sym" ]; 
+then
+  Nshared=$(awk -F'\t' '{print $1}' ./"$genome_1"_vs_"$genome_2".tsv  |sort -u |echo "$(($(wc -l)-2))")
+fi
 echo $Nshared > "$i"_"$j".Nshared
 j=$((j+1))
 done
