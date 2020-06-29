@@ -1,5 +1,5 @@
 # Gen2Mat
-Mostly bashful script for gene sharing matrix. Input is a directory with one file per genome, where each is single multi fasta with amino acid sequences of that genomes predicted proteins. 
+Mostly bashful script for gene sharing matrix. Input is a directory with one file per genome, where each file is multi fasta with amino acid sequences of that genomes predicted proteins. 
 Sequences are clsutered (CD-HIT) at supplied criteria. Output is a general gene sharing matrix.
 clstr2txt.pl is from CD-HIT. 
 *.env file specifics the given positional argument used, which are:
