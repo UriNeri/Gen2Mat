@@ -21,7 +21,7 @@ THREADS=$1
 Memory=$2
 output_dir=$3
 input_dir=$4
-watermark=$5 #(0.0000000001 70 0.5 300) # [<E-value,score1/score/bits,min_alignment_coverage,qlen>]
+watermark=$5 #Something to pass to .env.
 min_prec_id=$6 #0.90 
 min_prec_cov=$7 #0.75
 
@@ -48,6 +48,8 @@ do
 done
 mkdir GenomeXGenome 
 cd GenomeXGenome
+
+declare -A matrix
 i=1
 for genome_1 in ${Genome_list[*]} 
 do
@@ -62,38 +64,24 @@ if [ "$8" == "Sym" ];
 then
   Nshared=$(awk -F'\t' '{print $3}' ./"$genome_1"_vs_"$genome_2".tsv  |sort -u |echo "$(($(wc -l)-1))")
 fi
-if [ "$8" != "Sym" ]; 
+if [ "$8" != "Sym" ]; #Not else as maybe add more option (e.g. both) later.
 then
   Nshared=$(awk -F'\t' '{print $1}' ./"$genome_1"_vs_"$genome_2".tsv  |sort -u |echo "$(($(wc -l)-2))")
 fi
 echo $Nshared > "$i"_"$j".Nshared
+matrix[$i,$j]=$(cat "$i"_"$j".Nshared)
 j=$((j+1))
 done
 i=$((i+1))
 done
 rm tmp
-declare -A matrix
-num_rows=$Ngenomes
-num_columns=$Ngenomes
 
-for ((i=1;i<=num_rows;i++)) do
-    for ((j=1;j<=num_columns;j++)) do
-        matrix[$i,$j]=$(cat "$i"_"$j".Nshared)
-    done
-done
-
-f1="%$((${#num_rows}+1))s"
+f1="%$((${#Ngenomes}+1))s"
 f2=" %9s"
 
-printf "$f1" ''
-for ((i=1;i<=num_rows;i++)) do
-    printf "$f2" $i
-done
-echo
-
-for ((j=1;j<=num_columns;j++)) do
+for ((j=1;j<=Ngenomes;j++)) do
     printf "$f1" $j
-    for ((i=1;i<=num_rows;i++)) do
+    for ((i=1;i<=Ngenomes;i++)) do
         printf "$f2" ${matrix[$i,$j]}
     done
     echo
