@@ -43,7 +43,7 @@ perl $clstr2txt ./Clusteringfiles/Cls_c"$min_prec_id"_aS"$min_prec_cov".clstr > 
 Nclstrs=$(awk '{print $2}' formated.clstr |sort -u |wc -l)
 for genome in ${Genome_list[*]} 
 do
-  echo "Looking clusters with $genome members"
+  echo "Looking for clusters with $genome members"
   grep $genome -F ./formated.clstr  | awk '{print $2}' |sort -u > "$genome"_clstrs.txt
 done
 mkdir GenomeXGenome 
@@ -56,7 +56,7 @@ do
   j=1
 for genome_2 in ${Genome_list[*]} 
 do
-echo "Looking clusters shared between $genome_1 AND $genome_2"
+echo "Looking for clusters shared between $genome_1 AND $genome_2"
 comm  ../"$genome_1"_clstrs.txt ../"$genome_2"_clstrs.txt > tmp 
 header=$(echo $genome_1'\t'$genome_2'\t'$genome_1"_AND_"$genome_2)
 sed "1 i$header" tmp > ./"$genome_1"_vs_"$genome_2".tsv 
@@ -98,11 +98,11 @@ cd ..
 mv *clstr* ./Clusteringfiles/
 mv *.faa ./fastaFiles/
 echo "Enviroment_parameters: 
-Total number of clusters prefix = $Nclstrs 
+Total number of clusters = $Nclstrs 
 Clustering id >= $min_prec_id 
 Clustering coverage >= $min_prec_cov 
 Watermark $(echo ${watermark[*]})
-Call command $0
+Call command $0 "$@"
 $(date)
 " > "$(date | awk '{print $4}' | sed 's|:|_|g')"_Gen2MatRun.env
 
